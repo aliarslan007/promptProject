@@ -39,7 +39,7 @@ def generate_openai_variants(api_key, prompt, temperature, presence_penalty, fre
     client = OpenAI(api_key=api_key)
     # OpenAI.api_key = api_key
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
