@@ -1,0 +1,115 @@
+body{
+    background-color: #FFFFFF;
+}
+.sidebar{
+    background-color: #FFFFFF;
+}
+.main-content{
+    background-color: #FFFFFF;
+}
+.gap-colour{
+    background-color:#F2F2F2;
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.spacer {
+    height: 200px; /* Adjust this value as needed */
+}
+
+.container {
+    position: relative;
+    display: inline-block;
+}
+.textarea {
+    width: 100%;
+    height: 225px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.button-center {
+    padding: 5px 10px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer; 
+    background-color: #007BFF;
+}
+.width_50{
+    width: 70px;
+}
+.width_100_percent{
+    width: 100%;
+}
+.input-disabled{
+    background-color:#FFF !important;
+}
+.mt-n25 {
+    margin-top: -25px !important;
+}
+.spinner-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    z-index: 999; /* Ensure it's on top of other content */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .spinner-border {
+    z-index: 1000; /* Ensure spinner is on top of overlay */
+  }
+  .select_custom_style_instructins{
+    height: 45px;
+    text-align: center;
+    background: #FFFFFF url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="%23ffffff" d="M192 384c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L192 306.8l137.4-137.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-160 160C208.4 380.9 200.2 384 192 384z"/></svg>') right 1rem center/8px 10px no-repeat;
+
+  }
+  .custom_style_instructins{
+    height: 45px;
+    text-align: center;
+  }
+  .bold_text{
+    font-weight: bold;
+  }
+  .custom_border {
+    border-left: none;
+    border-right: none;
+    border-top: 2px solid #F2F2F2;  /* You can adjust the border width here */
+    border-bottom: 2px solid #F2F2F2;  /* You can adjust the border width here */
+}
+.gap-row {
+    background-color:#F2F2F2;
+    width: 100%;
+    height: 3px;
+}
+.system-prompt-label {
+    color: black;
+    font-weight: bold;
+}   
+  
+
+
+
+.custom-select-container {
+    position: relative;
+}
+.custom-select-container::before {
+    content: none; /* Hide the arrow on the left side */
+}
+
+.custom-select-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Position the arrow on the right side */
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 viewBox%3D%220 0 4 5%22%3E%3Cpath fill%3D%22%23ffffff%22 d%3D%22M2 0L0 2h4zm0 5L0 3h4z%22/%3E%3C/svg%3E') no-repeat center;
+}

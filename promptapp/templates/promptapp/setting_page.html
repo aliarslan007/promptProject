@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="row">
+        <div id="spinner-container" class="spinner-container">
+            <div id="spinner" class="spinner-border text-warning" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        <div class="col-3 row  ">
+            <div class="col-10 sidebar pt-5">
+                <button type="button" onclick="redirectTosetting()" class="col-12 btn btn-success">Settings</button>
+                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary">Instruction Set</button>
+                <button type="button" class=" col-12 btn btn-primary mt-2" onclick="redirectToOutputs()">Ouputs</button>
+                
+            </div>
+            <div class="col-2 gap-colour"></div>
+        </div>
+        <div class="container col-9 main-content pt-4 pe-4">
+            <form id="claude_api_form" method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group mt-4">
+                    <label for="claude_api_key" class="bold_text">Claude API Key:</label>
+                    <input type="text" id="claude_api_key" name="claude_api_key" class="form-control mt-2" value="{{Claude_API}}" >
+                    <div id="claude_error_message" class="text-danger mt-2" style="display: none;">Invalid Claude API Key</div>
+
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save Claude API Key</button>
+                </div>
+            </form>
+            
+            <form id="openai_api_form" method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group mt-3">
+                    <label for="openai_api_key" class="bold_text">OpenAI API Key:</label>
+                    <input type="text" id="openai_api_key" name="openai_api_key" class="form-control mt-2" value="{{OpenAI_API}}" >
+                    <div id="openai_error_message" class="text-danger mt-2" style="display: none;">Invalid OpenAI API Key</div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save OpenAI API Key</button>
+                </div>
+            </form>
+            
+            
+            <div id="copyMessage" class="text-center text-success mt-2" style="display: none;">APIs Updated Successfully!</div>
+        </div>
+        
+
+    </div> 
+   
+
+
+    
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+
+function redirectToOutputs() {
+        const url = "{% url 'promptapp:promptActionPage' %}";
+        window.location.href = url;
+    }
+
+
+
+
+function saveAndUpdateAPI () {
+    var claude_api_key = $('#claude_api_key').val();
+    var openai_api_key = $('#openai_api_key').val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/setting_page/', // Change this URL to match your Django URL
+        data: {
+            'Claude_API': claude_api_key,
+            'OpenAI_API': openai_api_key,
+            'csrfmiddlewaretoken': '{{ csrf_token }}' // Add this line to send the CSRF token
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.result) {
+                // alert('API saved/Updated successfully!');
+                const copyMessage = document.getElementById('copyMessage');
+                copyMessage.style.display = 'block';
+                        // Hide the message after 4 seconds
+                        setTimeout(() => {
+                                copyMessage.style.display = 'none';
+                            }, 5000);
+            } else {
+                alert('Failed to save instruction. Please try again.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert('An error occurred while saving instruction. Please try again.');
+        }
+    });
+};
+
+
+  $(document).ready(function() {
+    $('#API_form').submit(function(event) {
+      event.preventDefault();
+      saveAndUpdateAPI();
+    });
+  });
+
+  function redirectToInstructions() {
+        const url = "{% url 'promptapp:instructions_set' %}";
+        window.location.href = url;
+    }
+
+document.getElementById('claude_api_form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let claudeApiKey = document.getElementById('claude_api_key').value;
+        fetch(`/save_claude_api/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ 'claude_api_key': claudeApiKey })
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                document.getElementById('copyMessage').style.display = 'block';
+                document.getElementById('copyMessage').innerText = 'Claude API Key Updated Successfully!';
+                document.getElementById('claude_error_message').style.display = 'none'; // Hide error message if key is valid
+
+            } else {
+                document.getElementById('claude_error_message').style.display = 'block'; // Show error message if key is invalid
+            }
+        });
+    });
+
+    document.getElementById('openai_api_form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    let openaiApiKey = document.getElementById('openai_api_key').value;
+    fetch(`/save_openai_api/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ 'openai_api_key': openaiApiKey })
+    }).then(response => response.json()).then(data => {
+        if (data.success) {
+            document.getElementById('copyMessage').style.display = 'block';
+            document.getElementById('copyMessage').innerText = 'OpenAI API Key Updated Successfully!';
+            document.getElementById('openai_error_message').style.display = 'none'; // Hide error message if key is valid
+        } else {
+            document.getElementById('openai_error_message').style.display = 'block'; // Show error message if key is invalid
+        }
+    });
+});
+
+
+</script>
+</body>
+</html>
