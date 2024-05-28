@@ -216,6 +216,7 @@
                   </div>
                   <div id="openai_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">OpenAI API Key is not properly saved</div>
                   <div id="claude_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Claude API Key is not properly saved</div>
+                  <div id="required_prompt_error" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Prompt can not be empty</div>
 
                 <div class="d-flex flex-row-reverse  mb-2 me-2">
                     <button type="submit" class="btn btn-primary p-2 px-3">Submit</button>
@@ -305,6 +306,10 @@ var Instruction_C_check = false
 
 promptForm.addEventListener('submit', function(event) {
     event.preventDefault();
+    submitFormFunction();
+});
+
+function submitFormFunction(){
 
 document.getElementById("spinner-container").style.display = "flex"; // Display as flex to center vertically and horizontally
 // Get references to the checkboxes
@@ -370,7 +375,7 @@ fetch(`/queryPromptText`, {
 });
 
 
-});
+}
 
 function displayVariants(variants) {
     const variant_1_textarea = document.getElementById("variant_1_textarea");
@@ -545,7 +550,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function reloadPage() {
     // Reload the page
-    location.reload();
+    // location.reload();
+    const promptText = document.getElementById('prompt_text').value;
+
+    if (promptText == ""){
+    document.getElementById('required_prompt_error').style.display = 'block'; // Hide error message if key is valid
+    }
+    else{
+    submitFormFunction();
+    }
 }
 
 
