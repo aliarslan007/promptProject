@@ -568,6 +568,7 @@ document.getElementById("copyButton").addEventListener('click', function() {
             
             // Get the value of the hidden input element (contains JSON-formatted memory_array)
             const memoryArrayString = memoryDataElement.value;
+            console.log("memoryData is : ",memoryArrayString );
 
             try {
                 // Parse the JSON-formatted string into a JavaScript array
@@ -580,6 +581,8 @@ document.getElementById("copyButton").addEventListener('click', function() {
                     // Concatenate the text from each item
                     concatenatedText += (item.answer) + '\n\n'; // Add a newline after each item
                 });
+                
+            console.log("concatenatedText is : ",concatenatedText );
 
                 // Copy the concatenated text to the clipboard
                 navigator.clipboard.writeText(concatenatedText)
@@ -609,6 +612,8 @@ document.getElementById("copyInstructionAndAnswerButton").addEventListener('clic
             
             // Get the value of the hidden input element (contains JSON-formatted memory_array)
             const memoryArrayString = memoryDataElement.value;
+            
+            console.log("memoryData is : ",memoryArrayString );
 
             try {
                 // Parse the JSON-formatted string into a JavaScript array
@@ -624,6 +629,7 @@ document.getElementById("copyInstructionAndAnswerButton").addEventListener('clic
                     concatenatedText += "Answer_"+(index+1)+" : "+(item.answer) + '\n\n'; // Add a newline after each item
                 });
 
+                console.log("concatenatedText is : ",concatenatedText );
                 // Copy the concatenated text to the clipboard
                 navigator.clipboard.writeText(concatenatedText)
                     .then(() => {
