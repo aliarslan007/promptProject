@@ -585,21 +585,24 @@ document.getElementById("copyButton").addEventListener('click', function() {
             console.log("concatenatedText is : ",concatenatedText );
 
                 // Copy the concatenated text to the clipboard
-                navigator.clipboard.writeText(concatenatedText)
-                    .then(() => {
-                        // Clipboard successfully copied
-                        const copyMessage = document.getElementById('copyMessage');
-                        copyMessage.style.display = 'block';
-                        // Hide the message after 4 seconds
-                        setTimeout(() => {
-                                copyMessage.style.display = 'none';
-                            }, 5000);
-                    })
-                    .catch((error) => {
-                        // Unable to copy to clipboard
-                        console.error('Error copying text to clipboard:', error);
-                    });
-            } catch (error) {
+                // navigator.clipboard.writeText(concatenatedText)
+                //     .then(() => {
+                //         // Clipboard successfully copied
+                //         const copyMessage = document.getElementById('copyMessage');
+                //         copyMessage.style.display = 'block';
+                //         // Hide the message after 4 seconds
+                //         setTimeout(() => {
+                //                 copyMessage.style.display = 'none';
+                //             }, 5000);
+                //     })
+                //     .catch((error) => {
+                //         // Unable to copy to clipboard
+                //         console.error('Error copying text to clipboard:', error);
+                //     });
+            // Copy the concatenated text to the clipboard using the fallback method
+         copyTextToClipboard(concatenatedText);
+
+                } catch (error) {
                 console.error("Error parsing memory array:", error);
             }
         });
@@ -631,25 +634,58 @@ document.getElementById("copyInstructionAndAnswerButton").addEventListener('clic
 
                 console.log("concatenatedText is : ",concatenatedText );
                 // Copy the concatenated text to the clipboard
-                navigator.clipboard.writeText(concatenatedText)
-                    .then(() => {
-                        // Clipboard successfully copied
-                        const copyMessage = document.getElementById('copyMessage');
-                        copyMessage.style.display = 'block';
-                        // Hide the message after 4 seconds
-                        setTimeout(() => {
-                                copyMessage.style.display = 'none';
-                            }, 5000);
-                    })
-                    .catch((error) => {
-                        // Unable to copy to clipboard
-                        console.error('Error copying text to clipboard:', error);
-                    });
+                // navigator.clipboard.writeText(concatenatedText)
+                //     .then(() => {
+                //         // Clipboard successfully copied
+                //         const copyMessage = document.getElementById('copyMessage');
+                //         copyMessage.style.display = 'block';
+                //         // Hide the message after 4 seconds
+                //         setTimeout(() => {
+                //                 copyMessage.style.display = 'none';
+                //             }, 5000);
+                //     })
+                //     .catch((error) => {
+                //         // Unable to copy to clipboard
+                //         console.error('Error copying text to clipboard:', error);
+                //     });
+                 // Copy the concatenated text to the clipboard using the fallback method
+            copyTextToClipboard(concatenatedText);
             } catch (error) {
                 console.error("Error parsing memory array:", error);
             }
         });
 
+
+function copyTextToClipboard(text) {
+    // Create a temporary <textarea> element
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    
+    // Select the text in the <textarea>
+    textArea.select();
+    textArea.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the text to the clipboard
+    try {
+        document.execCommand('copy');
+        console.log('Text copied to clipboard');
+        
+        // Show the copy message
+        const copyMessage = document.getElementById('copyMessage');
+        copyMessage.style.display = 'block';
+        
+        // Hide the message after 4 seconds
+        setTimeout(() => {
+            copyMessage.style.display = 'none';
+        }, 5000);
+    } catch (err) {
+        console.error('Failed to copy text:', err);
+    }
+
+    // Remove the temporary <textarea> element
+    document.body.removeChild(textArea);
+}
 
 
 document.getElementById("model").addEventListener("change", function() {
