@@ -16,12 +16,12 @@
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-        <div class="col-3 row  ">
+          <div class="col-3 row  ">
             <div class="col-10 sidebar pt-5">
-                <button type="button" onclick="redirectTosetting()" class="col-12 btn btn-success">Settings</button>
-                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary">Instruction Set</button>
+              <button type="button" class="col-12 btn btn-success">Settings</button>
+                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary ">Instruction Set</button>
+                <button type="button" onclick="redirectToInstructionsTheme()" class="col-12 mt-2 btn btn-primary ">Instruction Theme</button>
                 <button type="button" class=" col-12 btn btn-primary mt-2" onclick="redirectToOutputs()">Ouputs</button>
-                
             </div>
             <div class="col-2 gap-colour"></div>
         </div>
@@ -54,7 +54,7 @@
             
             <div id="copyMessage" class="text-center text-success mt-2" style="display: none;">APIs Updated Successfully!</div>
         </div>
-        
+
 
     </div> 
    
@@ -137,6 +137,10 @@ function saveAndUpdateAPI () {
         const url = "{% url 'promptapp:instructions_set' %}";
         window.location.href = url;
     }
+    function redirectToInstructionsTheme() {
+    const url = "{% url 'promptapp:instructions_theme' %}";
+    window.location.href = url;
+}
 
 document.getElementById('claude_api_form').addEventListener('submit', function(event) {
         event.preventDefault();

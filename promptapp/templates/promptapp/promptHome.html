@@ -19,7 +19,8 @@
         <div class="col-3 row  ">
             <div class="col-10 sidebar pt-5">
                 <button type="button" onclick="redirectTosetting()" class="col-12 btn btn-primary">Settings</button>
-                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary">Instructions</button>
+                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary">Instructions Set</button>
+                <button type="button" onclick="redirectToInstructionsTheme()" class="col-12 mt-2 btn btn-primary ">Instruction Theme</button>
                 <button type="button" class=" col-12 btn btn-success mt-2">Ouputs</button>
                 <div class=" pt-3 mb-2 col-12" id="outputTextarea_div" name="outputTextarea_div" >
                     <label class="form-control input-disabled border border-dark-subtle rounded-3 pt-1" disabled  id="outputTextarea" name="outputTextarea" ></label>
@@ -112,7 +113,7 @@
                 <div class="col-2 ">
                     <select 
                         id="instruction_set" name="instruction_set"
-                        class="form-select mt-2 p-1 text-white bg-success d-flex rounded-4 custom_style_instructins" aria-label="Default select example">
+                        class="form-select mt-2 p-1 text-white bg-success d-flex rounded-2 custom_style_instructins" aria-label="Default select example">
                         {% for instruction in instructions_set %} 
                             <option id="instruction_name_{{ forloop.counter0 }}" name="instruction_name_{{ forloop.counter0 }}" value="{{ instruction.name }}" data-index="{{ forloop.counter0 }}">
                                 {{ instruction.name }}
@@ -127,13 +128,13 @@
                     {% endfor %}
                 </div>
                 <div class="col-2 ">
-                    <button id="instructionA_button" type="button" class="p-1 custom_style_instructins  btn btn-primary mt-2 rounded-4  px-3">Instruction A</button>
+                    <button id="instructionA_button" type="button" class="p-1 custom_style_instructins  btn btn-primary mt-2 rounded-2  px-3">Instruction A</button>
                 </div>
                 <div class="col-2 ">
-                    <button id="instructionB_button" type="button" class="p-1 custom_style_instructins  btn btn-primary mt-2 rounded-4  px-3">Instruction B</button>
+                    <button id="instructionB_button" type="button" class="p-1 custom_style_instructins  btn btn-primary mt-2 rounded-2  px-3">Instruction B</button>
                 </div>
                 <div class="col-2 ">
-                    <button id="instructionC_button" type="button" class="p-1 custom_style_instructins  btn btn-primary mt-2 rounded-4  px-3">Instruction C</button>
+                    <button id="instructionC_button" type="button" class="p-1 custom_style_instructins  btn btn-primary mt-2 rounded-2  px-3">Instruction C</button>
                 </div>
                 
             </div> -->
@@ -148,8 +149,8 @@
             <div class="container">
                 <!-- Dropdown for Instruction Sets -->
                 <div class="row mb-2">
-                    <div class="col-2">
-                        <select id="system_instruction_set" name="system_instruction_set" class="form-select mt-2 p-1 text-white bg-success rounded-4 select_custom_style_instructins" aria-label="Default select example">
+                    <div class="col-3">
+                        <select id="system_instruction_set" name="system_instruction_set" class="form-select mt-2 text-white bg-success rounded-2 select_custom_style_instructins" aria-label="Default select example">
                             {% for instruction_set in instructions_set %}
                                 <option value="{{ instruction_set.id }}">{{ instruction_set.name }}</option>
                             {% endfor %}
@@ -178,7 +179,48 @@
                 </div> -->
                 <input type="hidden" id="system_prompt_text_saved" name="system_prompt_text_saved" value=""/>
             </div>
+            <!-- starting transition prompt -->
 
+            <div class="row mb-2 m-2">
+                <div class="col-12">
+                    <span class="system-prompt-label cursor-pointer">Transitions Prompt</span>
+                </div>
+            </div>
+
+            <div class="container">
+                <!-- Dropdown for Instruction Sets -->
+                <div class="row mb-2">
+                    <div class="col-3">
+                        <select id="transition_instruction_theme" name="transition_instruction_theme" class="form-select mt-2  text-white bg-success rounded-2 select_custom_style_instructins" aria-label="Default select example">
+                            {% for instruction_theme in instructions_theme %}
+                                <option value="{{ instruction_theme.id }}">{{ instruction_theme.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+        
+                <!-- Hidden field to hold instructions data -->
+                <!-- <input type="hidden" id="instructions_data" value='{{ instructions_data}}' /> -->
+        
+                <!-- Container for displaying instructions -->
+                <div id="transition_instructions_theme" class="row">
+                    <!-- Instructions will be dynamically added here -->
+                </div>
+            </div>
+            <!-- new instuctions layout ends here -->
+            <div class="">
+                <div class="form-floating pt-2 mb-2 me-2">
+                    <textarea
+                    id="transition_prompt_text" name="transition_prompt_text"
+                     class="border border-dark-subtle rounded-3 form-control mt-3" id="system_floatingTextarea2" style="height: 150px"></textarea>
+                  </div>
+                <!-- <div class="d-flex flex-row-reverse  mb-2 me-2">
+                    <button type="submit" class="btn btn-primary p-2 px-3">Submit</button>
+                </div> -->
+                <input type="hidden" id="transition_prompt_text_saved" name="transition_prompt_text_saved" value=""/>
+            </div>
+            <!-- ending transition prompt -->
             <!-- below user prompt part -->
             <div class="row mb-2 m-3">
                 <div class="col-12">
@@ -189,8 +231,8 @@
             <div class="container">
                 <!-- Dropdown for Instruction Sets -->
                 <div class="row mb-2">
-                    <div class="col-2 ">
-                        <select id="instruction_set" name="instruction_set" class="form-select mt-2 p-1 text-white bg-success rounded-4 select_custom_style_instructins" aria-label="Default select example">
+                    <div class="col-3 ">
+                        <select id="instruction_set" name="instruction_set" class="form-select mt-2  text-white bg-success rounded-2 select_custom_style_instructins" aria-label="Default select example">
                             {% for instruction_set in instructions_set %}
                                 <option value="{{ instruction_set.id }}">{{ instruction_set.name }}</option>
                             {% endfor %}
@@ -200,20 +242,20 @@
                 
         
                 <!-- Hidden field to hold instructions data -->
-                <input type="hidden" id="instructions_data" value='{{ instructions_data}}' />
-        
+                <input type="hidden" id="instructions_data" value='{{ instructions_data}}' /> 
+                <input type="hidden" id="instructions_data_theme" value='{{ instructions_data_theme}}' /> 
                 <!-- Container for displaying instructions -->
                 <div id="instructions_container" class="row">
                     <!-- Instructions will be dynamically added here -->
                 </div>
             </div>
+            <div class="form-floating pt-2 mb-2 me-2">
+                <textarea
+                id="prompt_text" name="prompt_text"
+                 required class="border border-dark-subtle rounded-3 form-control mt-3" id="floatingTextarea2" style="height: 150px"></textarea>
+              </div>
             <!-- new instuctions layout ends here -->
             <div class="">
-                <div class="form-floating pt-2 mb-2 me-2">
-                    <textarea
-                    id="prompt_text" name="prompt_text"
-                     required class="border border-dark-subtle rounded-3 form-control mt-3" id="floatingTextarea2" style="height: 150px"></textarea>
-                  </div>
                   <div id="openai_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">OpenAI API Key is not properly saved</div>
                   <div id="claude_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Claude API Key is not properly saved</div>
                   <div id="required_prompt_error" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Prompt can not be empty</div>
@@ -322,6 +364,7 @@ const paragraph_limit = document.getElementById('paragraph_limit').value;
 const prompt_text = document.getElementById("prompt_text").value;
 const prompt_text_saved = document.getElementById('prompt_text_saved'); 
 const system_prompt_text = document.getElementById("system_prompt_text").value;
+const transition_prompt_text = document.getElementById("transition_prompt_text").value;
 const system_prompt_text_saved = document.getElementById('system_prompt_text_saved'); 
 const variant_1_textarea = document.getElementById("variant_1_textarea");
 const variant_1 = document.getElementById("variant_1");
@@ -330,6 +373,8 @@ const variant_2 = document.getElementById("variant_2");
 const variant_3_textarea = document.getElementById("variant_3_textarea");
 const variant_3 = document.getElementById("variant_3");
 prompt_text_saved.value = prompt_text;// const limit = 50;
+prompt_text+= "\n"+transition_prompt_text;
+console.log("prompt_text: ", prompt_text)
 Instruction_A_check = false  
 Instruction_B_check = false  
 Instruction_C_check = false  
@@ -727,6 +772,10 @@ function redirectToInstructions() {
         const url = "{% url 'promptapp:instructions_set' %}";
         window.location.href = url;
     }
+function redirectToInstructionsTheme() {
+    const url = "{% url 'promptapp:instructions_theme' %}";
+    window.location.href = url;
+}
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -784,7 +833,7 @@ $(document).ready(function() {
                     }
                     var instructionButton = `
                         <div class="col-lg-2 col-md-2 col-sm-4 col-6 mb-2">
-                            <button id="instruction_button_${instruction.id}" name="new_instruction_row_name_${instruction.id}" type="button" class="btn btn-primary mt-2 custom_style_instructins rounded-4 p-1 w-100" data-id="${instruction.id}">
+                            <button id="instruction_button_${instruction.id}" name="new_instruction_row_name_${instruction.id}" type="button" class="btn btn-primary mt-2 custom_style_instructins rounded-2 p-1 w-100" data-id="${instruction.id}">
                                 ${instruction.name}
                             </button>
                         </div>
@@ -810,7 +859,7 @@ $(document).ready(function() {
                     }
                     var instructionButton = `
                         <div class="col-lg-2 col-md-2 col-sm-4 col-6 mb-2">
-                            <button id="system_instruction_button_${instruction.id}" name="system_new_instruction_row_name_${instruction.id}" type="button" class="btn btn-primary mt-2 custom_style_instructins rounded-4 p-1 w-100" data-id="${instruction.id}">
+                            <button id="system_instruction_button_${instruction.id}" name="system_new_instruction_row_name_${instruction.id}" type="button" class="btn btn-primary mt-2 custom_style_instructins rounded-2 p-1 w-100" data-id="${instruction.id}">
                                 ${instruction.name}
                             </button>
                         </div>
@@ -820,24 +869,65 @@ $(document).ready(function() {
             }
         }
 
+        // ending system load instructions
+        
+        
+        function transitionLoadInstructionsTheme(setId) {
+            var instructionsData = JSON.parse($('#instructions_data_theme').val());
+            console.log("instructionsData: ", instructionsData)
+            var selectedInstructions = instructionsData.find(set => set.set_id == setId).instructions;
 
-                    // Load instructions for the first instruction set on page load
-            var firstSetId = $('#instruction_set').val();
-            loadInstructions(firstSetId);
+            var instructionsContainer = $('#transition_instructions_theme');
+            instructionsContainer.empty();  // Clear previous instructions
 
-            var firstSetId = $('#system_instruction_set').val();
-            systemLoadInstructions(firstSetId);
+            if (selectedInstructions.length > 0) {
+                var row;
+                $.each(selectedInstructions, function(index, instruction) {
+                    if (index % 6 === 0) {
+                        row = $('<div class="row mb-2"></div>');
+                        instructionsContainer.append(row);
+                    }
+                    var instructionButton = `
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-6 mb-2">
+                            <button id="transition_instruction_button_${instruction.id}" name="transition_new_instruction_row_name_${instruction.id}" type="button" class="btn btn-primary mt-2 custom_style_instructins rounded-2 p-1 w-100" data-id="${instruction.id}">
+                                ${instruction.name}
+                            </button>
+                        </div>
+                    `;
+                    row.append(instructionButton);
+                });
+            }
+        }
+         
+    // Load instructions for the first instruction set on page load
+        var firstSetId = $('#instruction_set').val();
+        loadInstructions(firstSetId);
 
-            // Load instructions when an instruction set is selected from the dropdown
-            $('#instruction_set').change(function() {
-                var selectedSetId = $(this).val();
-                loadInstructions(selectedSetId);
-            });
-            $('#system_instruction_set').change(function() {
-                var selectedSetId = $(this).val();
-                systemLoadInstructions(selectedSetId);
-            });
+        var firstSetId = $('#system_instruction_set').val();
+        systemLoadInstructions(firstSetId);
+
+        var firstThemeID = $('#transition_instruction_theme').val();
+        transitionLoadInstructionsTheme(firstThemeID);
+
+        // Load instructions when an instruction set is selected from the dropdown
+        $('#instruction_set').change(function() {
+            var selectedSetId = $(this).val();
+            loadInstructions(selectedSetId);
         });
+
+        $('#system_instruction_set').change(function() {
+            var selectedSetId = $(this).val();
+            systemLoadInstructions(selectedSetId);
+        });
+
+        $('#transition_instruction_theme').change(function() {
+        console.log("on click transition select")
+        var selectedSetId = $(this).val();
+        transitionLoadInstructionsTheme(selectedSetId);
+    });
+            
+        });
+
         
 $(document).on("click", "[id^='instruction_button_']", function(){
         var id = $(this).attr('id'); // Get the ID of the clicked element
@@ -856,6 +946,16 @@ $(document).on("click", "[id^='system_instruction_button_']", function(){
         // var instructionId = $(this).data('id');
         // console.log(" 0 : ")
         systemDisplayInstructionText(instructionId);
+                
+            });
+
+$(document).on("click", "[id^='transition_instruction_button_']", function(){
+        var id = $(this).attr('id'); // Get the ID of the clicked element
+        var instructionId = id.split('_')[3];
+        console.log("0 instructionId : ", instructionId)
+        // var instructionId = $(this).data('id');
+        // console.log(" 0 : ")
+        transitionDisplayInstructionText(instructionId);
                 
             });
 
@@ -888,6 +988,23 @@ $(document).on("click", "[id^='system_instruction_button_']", function(){
             var instruction = instructionSet.instructions.find(instr => instr.id == instructionId);
             if (instruction) {
                 $('#system_prompt_text').val(instruction.text);
+                break;
+            }
+        }
+    }
+    
+    function transitionDisplayInstructionText(instructionId) {
+        
+        console.log("1 instructionId: ", instructionId)
+        var instructionsData = JSON.parse($('#instructions_data_theme').val());
+        console.log("2 instructionsData: ", instructionsData)
+
+        for (var i = 0; i < instructionsData.length; i++) {
+            var instructionSet = instructionsData[i];
+            console.log("instructionSet: ", instructionSet)
+            var instruction = instructionSet.instructions.find(instr => instr.id == instructionId);
+            if (instruction) {
+                $('#transition_prompt_text').val(instruction.text);
                 break;
             }
         }

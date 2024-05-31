@@ -63,12 +63,7 @@ body{
   .spinner-border {
     z-index: 1000; /* Ensure spinner is on top of overlay */
   }
-  .select_custom_style_instructins{
-    height: 45px;
-    text-align: center;
-    background: #FFFFFF url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="%23ffffff" d="M192 384c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L192 306.8l137.4-137.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-160 160C208.4 380.9 200.2 384 192 384z"/></svg>') right 1rem center/8px 10px no-repeat;
-
-  }
+  
   .custom_style_instructins{
     height: 45px;
     text-align: center;
@@ -113,3 +108,12 @@ body{
     pointer-events: none;
     background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 viewBox%3D%220 0 4 5%22%3E%3Cpath fill%3D%22%23ffffff%22 d%3D%22M2 0L0 2h4zm0 5L0 3h4z%22/%3E%3C/svg%3E') no-repeat center;
 }
+
+
+.select_custom_style_instructins{
+    min-width: 193px;
+    width: auto;
+    height: 45px;
+    text-align: center;
+    background: #FFFFFF url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="%23ffffff" d="M192 384c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L192 306.8l137.4-137.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-160 160C208.4 380.9 200.2 384 192 384z"/></svg>') right 1rem center/8px 10px no-repeat;
+  }

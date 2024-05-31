@@ -9,7 +9,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import anthropic
 from django.views.decorators.csrf import csrf_exempt
-from .models import InstructionsSet , SettingPage, Instruction
+from .models import *
 import httpx
 import openai
 from openai import OpenAIError, AuthenticationError, RateLimitError, APIConnectionError
@@ -97,6 +97,9 @@ def promptActionPage(request):
 
     instructions_set = InstructionsSet.objects.all()
     instructions_data = []
+    instructions_theme = InstructionsTheme.objects.all()
+    instructions_data_theme = []
+
 
     for instruction_set in instructions_set:
         instructions = instruction_set.instructions.all()
@@ -106,22 +109,32 @@ def promptActionPage(request):
             'instructions': [{'id': instr.id, 'name': instr.name, 'text': instr.text} for instr in instructions]
         })
 
+    for instruction_theme in instructions_theme:
+        instructions = instruction_theme.instructionsThemeRow.all()
+        instructions_data_theme.append({
+            'set_id': instruction_theme.id,
+            'set_name': instruction_theme.name,
+            'instructions': [{'id': instr.id, 'name': instr.name, 'text': instr.text} for instr in instructions]
+        })
+
+    print(" themes are ", instructions_theme)
+    print(" instructions_set are ", instructions_set)
     memory_json = json.dumps(memory)
     context = {
         'memory_array': memory_json,
         'instructions_set': instructions_set,
-        'instructions_data': json.dumps(instructions_data)  # Convert to JSON for easy access in JS
+        'instructions_data': json.dumps(instructions_data),  # Convert to JSON for easy access in JS
+        'instructions_theme': instructions_theme,
+        'instructions_data_theme': json.dumps(instructions_data_theme)
     }
     return render(request, 'promptapp/promptHome.html', context)
+
 
 @login_required(login_url="myauth:loginPage")
 def instructions_set(request):
     memory = request.session.get('memory', [])
     if not isinstance(memory, list):
                 memory = []
-    
-    # instructions_set = InstructionsSet.objects.all()
-    # instructions_set = InstructionsSet.objects.all().prefetch_related('instructions')
     instructions_set = InstructionsSet.objects.all()
     instructions_data = [
         {
@@ -141,7 +154,8 @@ def instructions_set(request):
         'instructions_data': instructions_json
     }
     return render(request, 'promptapp/instructionsset.html', context)
-    
+
+
 # views.py
 @csrf_exempt
 def save_or_edit_instruction(request):
@@ -191,6 +205,7 @@ def save_or_edit_instruction(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+
 # views.py
 @csrf_exempt
 def delete_instruction(request):
@@ -204,6 +219,7 @@ def delete_instruction(request):
             return JsonResponse({'status': 'error', 'message': 'Instruction does not exist'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
 
 @login_required(login_url="myauth:loginPage")
 def query_prompt_text(request):
@@ -330,6 +346,97 @@ def setting_page(request):
             'OpenAI_API': OpenAI_API
         }
         return render(request, 'promptapp/setting_page.html', context)
+
+
+@login_required(login_url="myauth:loginPage")
+def instructions_theme(request):
+    memory = request.session.get('memory', [])
+    if not isinstance(memory, list):
+                memory = []
+    instructions_theme = InstructionsTheme.objects.all()
+    instructions_data = [
+        {
+            'set_id': instruction_theme.id,
+            'set_name': instruction_theme.name,
+            'instructions': list(instruction_theme.instructionsThemeRow.values('id', 'name','text'))
+        }
+        for instruction_theme in instructions_theme
+    ]
+    instructions_json = json.dumps(instructions_data)
+    memory_json = json.dumps(memory)
+    print("instructions_theme: ", instructions_json)
+    print("memory_json: ", memory_json)
+    context = {
+        'memory_array': memory_json,
+        'instructions_theme': instructions_theme,
+        'instructions_data': instructions_json
+    }
+    return render(request, 'promptapp/instructionstheme.html', context)
+
+
+
+# views.py
+@csrf_exempt
+def save_or_edit_instructiontheme(request):
+    if request.method == 'POST':
+        # print("request post : ", (request.POST))
+        instruction_id = request.POST.get('instruction_id')  # For editing, this will be provided
+        if instruction_id:
+            instruction_id = int(instruction_id)
+        else:
+            instruction_id = ""  # or set it to some default value
+        # print("instruction_id : ", instruction_id)
+        instruction_theme_name = request.POST.get('instruction_theme_name')
+        instructions = json.loads(request.POST.get('instructions', '[]'))
+        
+        # Create new InstructionsSet
+
+        if instruction_id:  # If instruction_id is provided, it means we are editing existing instruction
+            try:
+                instruction_theme = InstructionsTheme.objects.get(id=instruction_id)
+                instruction_theme.name = instruction_theme_name
+                instruction_theme.save()
+
+                InstructionsThemeRow.objects.filter(instruction_theme_id=instruction_id).delete()
+
+                for instr in instructions:
+                    instruction_obj_new = InstructionsThemeRow.objects.create(
+                        instruction_theme=instruction_theme, 
+                        name=instr['name'],
+                        text=instr['text']
+                        )
+                    instruction_obj_new.save()
+                return JsonResponse({'status': 'success'})
+            except InstructionsSet.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Instruction does not exist'})
+        else:  # If instruction_id is not provided, it means we are creating a new instruction
+            instruction_theme = InstructionsTheme.objects.create(name=instruction_theme_name)
+            instruction_theme.save()
+            for instr in instructions:
+                    instruction_obj_new = InstructionsThemeRow.objects.create(
+                        instruction_theme=instruction_theme, 
+                        name=instr['name'],
+                        text=instr['text']
+                        )
+                    instruction_obj_new.save()
+
+            return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+# views.py
+@csrf_exempt
+def delete_instruction_theme(request):
+    if request.method == 'POST':
+        instruction_id = request.POST.get('instruction_id')
+        try:
+            instruction = InstructionsTheme.objects.get(id=instruction_id)
+            instruction.delete()
+            return JsonResponse({'status': 'success'})
+        except InstructionsSet.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Instruction does not exist'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 
 
