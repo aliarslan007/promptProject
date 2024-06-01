@@ -19,8 +19,8 @@
           <div class="col-3 row  ">
             <div class="col-10 sidebar pt-5">
               <button type="button" class="col-12 btn btn-success">Settings</button>
-                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary ">Instruction Set</button>
-                <button type="button" onclick="redirectToInstructionsTheme()" class="col-12 mt-2 btn btn-primary ">Instruction Theme</button>
+                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary ">Themes</button>
+                <button type="button" onclick="redirectToInstructionsTheme()" class="col-12 mt-2 btn btn-primary ">Instructions</button>
                 <button type="button" class=" col-12 btn btn-primary mt-2" onclick="redirectToOutputs()">Ouputs</button>
             </div>
             <div class="col-2 gap-colour"></div>
@@ -107,7 +107,7 @@ function saveAndUpdateAPI () {
         dataType: 'json',
         success: function(response) {
             if (response.result) {
-                // alert('API saved/Updated successfully!');
+                // // alert('API saved/Updated successfully!');
                 const copyMessage = document.getElementById('copyMessage');
                 copyMessage.style.display = 'block';
                         // Hide the message after 4 seconds
@@ -115,12 +115,12 @@ function saveAndUpdateAPI () {
                                 copyMessage.style.display = 'none';
                             }, 5000);
             } else {
-                alert('Failed to save instruction. Please try again.');
+                // alert('Failed to save instruction. Please try again.');
             }
         },
         error: function(xhr, status, error) {
             console.error(xhr.responseText);
-            alert('An error occurred while saving instruction. Please try again.');
+            // alert('An error occurred while saving instruction. Please try again.');
         }
     });
 };

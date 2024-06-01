@@ -19,8 +19,8 @@
         <div class="col-3 row  ">
             <div class="col-10 sidebar pt-5">
               <button type="button" onclick="redirectTosetting()" class="col-12 btn btn-primary">Settings</button>
-                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary ">Instruction Set</button>
-                <button type="button"  class="col-12 mt-2 btn btn-success ">Instruction Theme</button>
+                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary ">Themes</button>
+                <button type="button"  class="col-12 mt-2 btn btn-success ">Instructions</button>
                 <button type="button" class=" col-12 btn btn-primary mt-2" onclick="redirectToOutputs()">Ouputs</button>
                 
             </div>
@@ -29,7 +29,7 @@
         <div class="col-9 main-content pt-4 pe-4">
             <br><br>
             <div class="d-flex flex-row-reverse p-3 mt-5  mb-2 me-2">
-                <button id="add_new_instruction" name="add_new_instruction" type="button" class="btn text-white btn-success p-2 me-5 px-3" >Add New Instruction Theme</button>
+                <button id="add_new_instruction" name="add_new_instruction" type="button" class="btn text-white btn-success p-2 me-5 px-3" >New Instruction</button>
             </div>
 
             <div class="d-flex grid  col-10">
@@ -37,7 +37,7 @@
                     <label class="d-flex justify-content-center bold_text" for="floatingInputValue">#</label>
                 </div>
                 <div class="col-3 gap-colour p-2 me-3">
-                    <label class=" d-flex justify-content-center bold_text" for="floatingInputValue">Instruction Themes</label>
+                    <label class=" d-flex justify-content-center bold_text" for="floatingInputValue">Instruction</label>
                 </div>
                 <div class="col-3 " id="presence_penalty_div" name="presence_penalty_div">
                     <label class="p-2 d-flex justify-content-center bold_text custom_border " for="floatingInputValue">Action</label>
@@ -85,15 +85,15 @@
           <form action="" id="new_instruction_form">  
             <input type="hidden" id="modal_instruction_id" name="modal_instruction_id" value="">
             <div class="mb-3">
-              <label for="recipient-name" class="col-form-label bold_text">Instruction Theme Name:</label>
+              <label for="recipient-name" class="col-form-label bold_text">Instruction Name:</label>
               <input  id="new_instruction_name" name="new_instruction_name" type="text" class="form-control " required>
             </div>
             <div class="mb-3" id="parent_instruction_row" name="parent_instruction_row">
               <div id="instruction_row_0" name="instruction_row_0" class="">
-                <label for="message-text" class="col-form-label bold_text">Insruction Name :</label>
+                <label for="message-text" class="col-form-label bold_text">Name :</label>
                 <Input id="new_instruction_row_name_0" name="new_instruction_row_name_0" class="form-control " required></textarea>
                 
-                <label for="message-text" class="col-form-label bold_text mt-1">Instruction Text :</label>
+                <label for="message-text" class="col-form-label bold_text mt-1">Text :</label>
                 <textarea id="new_instruction_0" name="new_instruction_0" class="form-control " required></textarea>
                 <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
 
@@ -174,10 +174,10 @@ function addNewInstruction() {
     // Populate instruction rows
     let newRow = `
         <div id="instruction_row_0" name="instruction_row_0" class="instruction-row">
-            <label for="message-text" class="col-form-label bold_text">Instruction Name :</label>
+            <label for="message-text" class="col-form-label bold_text">Name :</label>
             <input id="new_instruction_row_name_0" name="new_instruction_row_name_0" class="form-control" value="" required>
             
-            <label for="message-text" class="col-form-label bold_text mt-1">Instruction Text :</label>
+            <label for="message-text" class="col-form-label bold_text mt-1">Text :</label>
             <textarea id="new_instruction_0" name="new_instruction_0" class="form-control" required></textarea>
             
             <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
@@ -232,7 +232,7 @@ $(document).ready(function() {
             // Remove the specific row
             $(this).closest('div[id^="instruction_row_"]').remove();
         } else {
-            alert("At least one instruction row must be present.");
+            // alert("At least one instruction row must be present.");
         }
     });
 });
@@ -241,7 +241,7 @@ function saveInstructions () {
   const modal_instruction_id = document.getElementById("modal_instruction_id");
     var instructionId = modal_instruction_id.value
     console.log("instructionId: for check : ", instructionId)
-    // alert(" instructionId :" , instructionId)
+    // // alert(" instructionId :" , instructionId)
     let instructionThemeName = $('#new_instruction_name').val();
     let instructions = [];
 
@@ -264,19 +264,19 @@ function saveInstructions () {
         dataType: 'json',
         success: function(response) {
             if (response.status === 'success') {
-                // alert('Instruction saved successfully!');
+                // // alert('Instruction saved successfully!');
                 var new_instruction_modal =document.getElementById("new_instruction_modal");
                 new_instruction_modal.style.visibility = "hidden";
                 new_instruction_modal.style.opacity = 0;
                 new_instruction_modal.style.top = -100;   
                 window.location.reload();
             } else {
-                alert('Failed to save instruction. Please try again.');
+                // alert('Failed to save instruction. Please try again.');
             }
         },
         error: function(xhr, status, error) {
             console.error(xhr.responseText);
-            alert('An error occurred while saving instruction. Please try again.');
+            // alert('An error occurred while saving instruction. Please try again.');
         }
     });
 };
@@ -303,16 +303,16 @@ function saveInstructions () {
         dataType: 'json',
         success: function(response) {
           if (response.status === 'success') {
-            alert('Instruction deleted successfully!');
+            // alert('Instruction deleted successfully!');
             window.location.reload();
             // You can add any further actions here upon successful deletion
           } else {
-            alert('Failed to delete instruction. Please try again.');
+            // alert('Failed to delete instruction. Please try again.');
           }
         },
         error: function(xhr, status, error) {
           console.error(xhr.responseText);
-          alert('An error occurred while deleting instruction. Please try again.');
+          // alert('An error occurred while deleting instruction. Please try again.');
         }
       });
     }

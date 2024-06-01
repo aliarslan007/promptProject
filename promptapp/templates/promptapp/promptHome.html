@@ -19,8 +19,8 @@
         <div class="col-3 row  ">
             <div class="col-10 sidebar pt-5">
                 <button type="button" onclick="redirectTosetting()" class="col-12 btn btn-primary">Settings</button>
-                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary">Instructions Set</button>
-                <button type="button" onclick="redirectToInstructionsTheme()" class="col-12 mt-2 btn btn-primary ">Instruction Theme</button>
+                <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary">Themes</button>
+                <button type="button" onclick="redirectToInstructionsTheme()" class="col-12 mt-2 btn btn-primary ">Instructions</button>
                 <button type="button" class=" col-12 btn btn-success mt-2">Ouputs</button>
                 <div class=" pt-3 mb-2 col-12" id="outputTextarea_div" name="outputTextarea_div" >
                     <label class="form-control input-disabled border border-dark-subtle rounded-3 pt-1" disabled  id="outputTextarea" name="outputTextarea" ></label>
@@ -412,7 +412,7 @@ fetch(`/queryPromptText`, {
             document.getElementById('openai_error_message').style.display = 'block'; // Hide error message if key is valid
         }
          // const error_is = data.error
-        // alert(" error occured: ", error_is)
+        // // alert(" error occured: ", error_is)
     }
 })
 .catch((error) => {
@@ -1024,12 +1024,12 @@ function logout() {
         if (response.ok) {
             window.location.href = "{% url 'myauth:loginPage' %}";
         } else {
-            alert('Logout failed. Please try again.');
+            // alert('Logout failed. Please try again.');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        // alert('An error occurred. Please try again.');
     });
 }
    
