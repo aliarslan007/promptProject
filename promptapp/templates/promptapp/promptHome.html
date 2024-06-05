@@ -18,6 +18,9 @@
           </div>
         <div class="col-3 row  ">
             <div class="col-10 sidebar pt-5">
+                <div class="d-flex flex-row justify-content-center mb-2 me-2">
+                    <button type="button" class="btn btn-danger p-2 px-3" onclick="logout()">Logout</button>
+                </div>
                 <button type="button" onclick="redirectTosetting()" class="col-12 btn btn-primary">Settings</button>
                 <button type="button" onclick="redirectToInstructions()" class="col-12 mt-2 btn btn-primary">Themes</button>
                 <button type="button" onclick="redirectToInstructionsTheme()" class="col-12 mt-2 btn btn-primary ">Instructions</button>
@@ -47,9 +50,7 @@
         </div>
         <div class="col-9 main-content pt-4 pe-4">
 
-            <div class="d-flex flex-row-reverse  mb-2 me-2">
-                <button type="button" class="btn btn-danger p-2 px-3" onclick="logout()">Logout</button>
-            </div>
+            
            <form
            id="promptForm"
            enctype="multipart/form-data"
@@ -151,68 +152,80 @@
             </div>
           
             <!-- below user prompt part -->
-            <div class="row  mx-3">
-                <div class="col-12 mt-1">
-                    <span class="system-prompt-label cursor-pointer">User Prompt</span>
-                </div>
-            </div>
+            
 
             
             <input type="hidden" id="instructions_data" value='{{ instructions_data}}' /> 
             <input type="hidden" id="instructions_data_theme" value='{{ instructions_data_theme}}' /> 
-            <div class="form-floating pt-2 me-2">
-                <textarea
-                id="prompt_text" name="prompt_text"
-                 required class="border border-dark-subtle rounded-3 form-control mt-3" id="floatingTextarea2" style="height: 150px"></textarea>
-              </div>
-              <div id="openai_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">OpenAI API Key is not properly saved</div>
-                  <div id="claude_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Claude API Key is not properly saved</div>
-                  <div id="required_prompt_error" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Prompt can not be empty</div>
 
-              <!-- user prompt ends here -->
-
-                <!-- starting transition prompt -->
-
-            <div class="row mb-2 m-2">
-                <div class="col-12">
-                    <span class="system-prompt-label cursor-pointer">Transitions Prompt</span>
-                </div>
-            </div>
-
-            <div class="container">
-                <!-- Dropdown for Instruction Sets -->
-                <div class="row mb-2">
-                    <div class="col-3">
-                        <select id="transition_instruction_theme" name="transition_instruction_theme" class="form-select mt-2  text-white bg-success rounded-2 select_custom_style_instructins" aria-label="Default select example">
-                            {% for instruction_theme in instructions_theme %}
-                                <option value="{{ instruction_theme.id }}">{{ instruction_theme.name }}</option>
-                            {% endfor %}
-                        </select>
+            <div class="d-flex flex-row " id="prompt_parent_div">
+                <div class="col-6 " id="user_prompt_outer_div" style="padding-right:10px">
+                    <!-- User Prompt area starts  here -->
+    
+                    <div class="form-floating pt-2 me-2">
+                        <textarea
+                        id="prompt_text" name="prompt_text"
+                        required class="border border-dark-subtle rounded-3 form-control mt-3" id="floatingTextarea2" style="height: 150px"></textarea>
                     </div>
+                        <div id="openai_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">OpenAI API Key is not properly saved</div>
+                        <div id="claude_error_message" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Claude API Key is not properly saved</div>
+                        <div id="required_prompt_error" class="text-danger form-floating pt-2 mb-2 me-2 bold_text " style="display: none;">Prompt can not be empty</div>
+                        <div class="row  mx-3">
+                            <div class="col-12 mt-1">
+                                <span class="system-prompt-label cursor-pointer">User Prompt</span>
+                            </div>
+                        </div>
+                    <!-- user prompt area ends here -->
+                </div>
+    
+                <div class="col-6 " id="transition_prompt_outer_div" style="padding-left:10px">
+                    <!-- starting transition prompt -->
+                    <div class="" id="">
+                        <div class="form-floating pt-2 mb-2 me-2">
+                            <textarea
+                            id="transition_prompt_text" name="transition_prompt_text"
+                             class="border border-dark-subtle rounded-3 form-control mt-3" id="system_floatingTextarea2" style="height: 150px"></textarea>
+                          </div>
+                        <!-- <div class="d-flex flex-row-reverse  mb-2 me-2">
+                            <button type="submit" class="btn btn-primary p-2 px-3">Submit</button>
+                        </div> -->
+                        <input type="hidden" id="transition_prompt_text_saved" name="transition_prompt_text_saved" value=""/>
+                    </div>
+                    <div class="row mb-2 m-2">
+                        <div class="col-12">
+                            <span class="system-prompt-label cursor-pointer">Transitions Prompt</span>
+                        </div>
+                    </div>
+        
+                    <div class="container">
+                        <!-- Dropdown for Instruction Sets -->
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <select id="transition_instruction_theme" name="transition_instruction_theme" class="form-select mt-2 text-white bg-success rounded-2 select_custom_style_instructins" aria-label="Default select example">
+                                    {% for instruction_theme in instructions_theme %}
+                                        <option value="{{ instruction_theme.id }}" >{{ instruction_theme.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+        
+                        </div>
+                
+                        <!-- Hidden field to hold instructions data -->
+                        <!-- <input type="hidden" id="instructions_data" value='{{ instructions_data}}' /> -->
+                
+                        <!-- Container for displaying instructions -->
+                        <div id="transition_instructions_theme" class="row">
+                            <!-- Instructions will be dynamically added here -->
+                        </div>
+                    </div>
+                    <!-- transition prompt area end here -->
+    
+                </div>
+                
+            </div>
+           
 
-                </div>
-        
-                <!-- Hidden field to hold instructions data -->
-                <!-- <input type="hidden" id="instructions_data" value='{{ instructions_data}}' /> -->
-        
-                <!-- Container for displaying instructions -->
-                <div id="transition_instructions_theme" class="row">
-                    <!-- Instructions will be dynamically added here -->
-                </div>
-            </div>
-            <!-- new instuctions layout ends here -->
-            <div class="">
-                <div class="form-floating pt-2 mb-2 me-2">
-                    <textarea
-                    id="transition_prompt_text" name="transition_prompt_text"
-                     class="border border-dark-subtle rounded-3 form-control mt-3" id="system_floatingTextarea2" style="height: 150px"></textarea>
-                  </div>
-                <!-- <div class="d-flex flex-row-reverse  mb-2 me-2">
-                    <button type="submit" class="btn btn-primary p-2 px-3">Submit</button>
-                </div> -->
-                <input type="hidden" id="transition_prompt_text_saved" name="transition_prompt_text_saved" value=""/>
-            </div>
-            <!-- ending transition prompt -->
+                
             
             <!-- new instuctions layout ends here -->
             <div class="">
@@ -252,7 +265,7 @@
             </div>
             </div>
             
-            <div class="d-flex flex-row-reverse  mb-2 me-2 mt-5 ">
+            <div class="d-flex flex-row-reverse  mb-2 me-2 mt-1 ">
                 <svg xmlns="http://www.w3.org/2000/svg" id="reload_icon" name="reload_icon" onclick="reloadPage()" width="25" height="25" fill="#007BFF" class=" cursor-pointer bi bi-arrow-clockwise " viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
                     <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
@@ -821,7 +834,7 @@ $(document).ready(function() {
                         instructionsContainer.append(row);
                     }
                     var instructionButton = `
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-6 mb-2">
+                        <div class=" w-auto col-lg-2 col-md-2 col-sm-4 col-6 mb-2">
                             <button id="transition_instruction_button_${instruction.id}" name="transition_new_instruction_row_name_${instruction.id}" type="button" class="btn btn-primary mt-2 custom_style_instructins rounded-2 p-1 w-100" data-id="${instruction.id}">
                                 ${instruction.name}
                             </button>
