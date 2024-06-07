@@ -151,7 +151,8 @@ def instructions_set(request):
     context = {
         'memory_array': memory_json,
         'instructions_set': instructions_set,
-        'instructions_data': instructions_json
+        'instructions_data': instructions_json,
+
     }
     return render(request, 'promptapp/instructionsset.html', context)
 
@@ -210,10 +211,16 @@ def save_or_edit_instruction(request):
 @csrf_exempt
 def delete_instruction(request):
     if request.method == 'POST':
-        instruction_id = request.POST.get('instruction_id')
+        instruction_row_id = request.POST.get('instruction_row_id')
+        instruction_set_id = request.POST.get('instruction_set_id')
         try:
-            instruction = InstructionsSet.objects.get(id=instruction_id)
-            instruction.delete()
+            instruction_setObj = InstructionsSet.objects.get(id=instruction_set_id)
+            all_instructions_row = Instruction.objects.filter(instruction_set=instruction_setObj)
+            if len(all_instructions_row)>1:
+                desired_instruction_row = Instruction.objects.get(instruction_set= instruction_setObj , id = instruction_row_id)
+                desired_instruction_row.delete()
+            else:
+                instruction_setObj.delete()
             return JsonResponse({'status': 'success'})
         except InstructionsSet.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Instruction does not exist'})
@@ -428,11 +435,19 @@ def save_or_edit_instructiontheme(request):
 @csrf_exempt
 def delete_instruction_theme(request):
     if request.method == 'POST':
-        instruction_id = request.POST.get('instruction_id')
+        instruction_row_id = request.POST.get('instruction_row_id')
+        instruction_theme_id = request.POST.get('instruction_theme_id')
+        print("instruction_set_id: ", instruction_theme_id)
+        print("instruction_row_id: ", instruction_row_id)
         try:
-            instruction = InstructionsTheme.objects.get(id=instruction_id)
-            instruction.delete()
-            return JsonResponse({'status': 'success'})
+            instruction_setObj = InstructionsTheme.objects.get(id=instruction_theme_id)
+            all_instructions_row = InstructionsThemeRow.objects.filter(instruction_theme=instruction_setObj)
+            if len(all_instructions_row)>1:
+                desired_instruction_row = InstructionsThemeRow.objects.get(instruction_theme= instruction_setObj , id = instruction_row_id)
+                desired_instruction_row.delete()
+            else:
+                instruction_setObj.delete()
+            return JsonResponse({'status': 'success'})  
         except InstructionsSet.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Instruction does not exist'})
     else:

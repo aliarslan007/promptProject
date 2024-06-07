@@ -36,39 +36,20 @@
                 <div class="col-3 gap-colour p-2 ">
                     <label class="d-flex justify-content-center bold_text" for="floatingInputValue">#</label>
                 </div>
-                <div class="col-3 gap-colour p-2 me-3">
+                <div class="col-3 gap-colour p-2">
                     <label class=" d-flex justify-content-center bold_text" for="floatingInputValue">Theme</label>
                 </div>
+                <div class="col-3 gap-colour p-2 me-3">
+                  <label class=" d-flex justify-content-center bold_text" for="floatingInputValue">Instructions</label>
+              </div>
                 <div class="col-3 " id="presence_penalty_div" name="presence_penalty_div">
                     <label class="p-2 d-flex justify-content-center bold_text custom_border " for="floatingInputValue">Action</label>
                 </div>
                 
             </div>
 
-            {% for instruction in instructions_set %}
-            <div class="d-flex grid col-10">
-              <input type="hidden" id="instruction_set_id" name="instruction_set_id" value="{{ instruction.id }}"/>
-
-                <div class="col-3  p-2">
-                    <span class="d-flex justify-content-center align-items-center bold_text">{{ forloop.counter }}</span>
-                </div>
-                <div class="col-3  p-2 me-3">
-                    <span id="instruction_name_{{ forloop.counter0 }}" class="d-flex justify-content-center align-items-center bold_text">{{ instruction.name }}</span>
-                </div>
-                <div class="col-3 d-flex justify-content-center align-items-center  custom_border">
-                  <button id="edit_{{ instruction.id }}" class="btn btn-sm btn-primary me-2 cursor-pointer">Edit</button>
-                  <svg id="delete_{{ instruction.id }}"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash cursor-pointer" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                      </svg>
-                </div>
-            </div>
-            <input type="hidden" id="instruction_id_{{ forloop.counter0 }}" name="instruction_id_{{ forloop.counter0 }}" value="{{ instruction.id }}"/>
-            <input type="hidden" id="instructionA_{{ forloop.counter0 }}" name="instructionA_{{ forloop.counter0 }}" value="{{ instruction.instructionA }}"/>
-            <input type="hidden" id="instructionB_{{ forloop.counter0 }}" name="instructionB_{{ forloop.counter0 }}" value="{{ instruction.instructionB }}"/>
-            <input type="hidden" id="instructionC_{{ forloop.counter0 }}" name="instructionC_{{ forloop.counter0 }}" value="{{ instruction.instructionC }}"/>
-                   
-            {% endfor %}
+            <div id="instructions-container"></div>
+            
             <input type="hidden" id="instruction_data" name="instruction_data" value="{{ instructions_data }}">
 
         </div>
@@ -183,6 +164,9 @@ function addNewInstruction() {
             
             <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
             <br><br>
+
+            
+            
         </div>
     `;
     $('#parent_instruction_row').append(newRow);
@@ -282,15 +266,57 @@ function saveInstructions () {
     });
 };
 
+function loadThemeAndInstructions(){
+
+  const instructionsData = JSON.parse(document.getElementById('instruction_data').value);
+
+  const instructionsContainer = document.getElementById('instructions-container');
+            let content = '';
+  // Loop through each instruction set
+  instructionsData.forEach((instructionSet, setIndex) => {
+                instructionSet.instructions.forEach((instruction, instructionIndex) => {
+                    content += `
+                        <div class="d-flex grid col-10">
+                            <input type="hidden" id="instruction_set_id_${instructionSet.set_id}" name="instruction_set_id_${instructionSet.set_id}" value="${instructionSet.set_id}" />
+
+                            <div class="col-3 p-2">
+                                <span class="d-flex justify-content-center align-items-center bold_text">${setIndex + 1}</span>
+                            </div>
+                            <div class="col-3 p-2 me-3">
+                                <span id="instruction_name_${instructionSet.set_id}" class="d-flex justify-content-center align-items-center bold_text">${instructionSet.set_name}</span>
+                            </div>
+                            <div class="col-3 p-2">
+                                <span class="d-flex justify-content-center align-items-center">${instruction.name}</span>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-center custom_border">
+                                <button id="edit_${instructionSet.set_id}" class="btn btn-sm btn-primary me-2 cursor-pointer">Edit</button>
+                                <svg id="delete_${instructionSet.set_id}_${instruction.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash cursor-pointer" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <input type="hidden" id="instruction_id_${instructionSet.set_id}" name="instruction_id_${instructionSet.set_id}" value="${instructionSet.set_id}" />
+                    `;
+                });
+            });
+
+            // Insert generated content into the container
+            instructionsContainer.innerHTML = content;
+
+}
+
 
   $(document).ready(function() {
     $('#new_instruction_form').submit(function(event) {
       event.preventDefault();
       saveInstructions();
     });
+    loadThemeAndInstructions();
+
   });
 
-  function deleteInstruction(instruction_set_id) {
+  function deleteInstruction(instruction_set_id, instruction_row_id) {
     // var confirmation = confirm("Are you sure you want to delete this instruction?");
      {
       // var instructionId = $('#instruction_id_' + index).val();
@@ -298,7 +324,8 @@ function saveInstructions () {
         type: 'POST',
         url: '/delete-instruction/',
         data: {
-          'instruction_id': instruction_set_id,
+          'instruction_row_id': instruction_row_id,
+          'instruction_set_id': instruction_set_id,
           'csrfmiddlewaretoken': '{{ csrf_token }}', // Add this line to send the CSRF token
         },
         dataType: 'json',
@@ -323,74 +350,10 @@ function saveInstructions () {
   $(document).on("click", "[id^='delete_']", function(){
     var id = $(this).attr('id'); // Get the ID of the clicked element
     var instruction_set_id = id.split('_')[1]; // Extract the index from the ID
-    deleteInstruction(instruction_set_id); // Call the deleteInstruction function with the extracted index
+    var instruction_row_id = id.split('_')[2]; // Extract the index from the ID
+    deleteInstruction(instruction_set_id, instruction_row_id); // Call the deleteInstruction function with the extracted index
 });
 
-
-// function editInstruction(index) {
-//     // Extracting values using index
-//     var instructionId = $('#instruction_id_' + index).val();
-//     var instructionName = $('#instruction_name_' + index).text();
-//     var instructionA = $('#instructionA_' + index).val();
-//     var instructionB = $('#instructionB_' + index).val();
-//     var instructionC = $('#instructionC_' + index).val();
-//     $('#modal_title').text('Edit Instruction'); // Change modal title to "Edit Instruction"
-
-//     // Setting values in modal
-//     $('#instruction_id').val(instructionId);
-//     $('#new_instruction_name').val(instructionName);
-//     $('#new_instruction_A').val(instructionA);
-//     $('#new_instruction_B').val(instructionB);
-//     $('#new_instruction_C').val(instructionC);
-
-//     // Show modal
-//     $('#new_instruction_modal').modal('show');
-
-//     // Adjusting modal's properties
-//     var new_instruction_modal =document.getElementById("new_instruction_modal");
-//     new_instruction_modal.style.visibility = "visible";
-//     new_instruction_modal.style.opacity = 1;
-//     new_instruction_modal.style.top = 0;   
-// }
-
-// Function to populate the modal with instruction set data for editing
-// function editInstructionSet() {
-//     // Find the instruction set data corresponding to the given ID 
-//     const buttonId = this.id; // Get the ID of the clicked button
-//     const instructionSetId = buttonId.split('_')[1]; // Extract the ID from the button ID
-//     console.log("Instruction Set ID:", instructionSetId);
-
-//     const instructionsData =$('#instruction_data').val();
-//     console.log("instruction_data : ", instructionsData);
-
-//     const instructionSetData = instructionsData.find(set => set.id === instructionSetId);
-//     if (instructionSetData) {
-//         // Populate the modal fields with the instruction set data
-//         $('#new_instruction_name').val(instructionSetData.name);
-
-//         // Clear existing instruction rows
-//         $('#parent_instruction_row').empty();
-
-//         // Populate instruction rows
-//         instructionSetData.instructions.forEach((instruction, index) => {
-//             let newRow = `
-//                 <div id="instruction_row_${index}" name="instruction_row_${index}" class="instruction-row">
-//                     <label for="message-text" class="col-form-label bold_text">Instruction Name :</label>
-//                     <input id="new_instruction_row_name_${index}" name="new_instruction_row_name_${index}" class="form-control" value="${instruction.name}" required>
-                    
-//                     <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Text :</label>
-//                     <textarea id="new_instruction_${index}" name="new_instruction_${index}" class="form-control" required>${instruction.text}</textarea>
-                    
-//                     <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
-//                     <br><br>
-//                 </div>
-//             `;
-//             $('#parent_instruction_row').append(newRow);
-//         });
-//     }
-
-
-//   }
 
 
 
@@ -440,6 +403,7 @@ $(document).on("click", "[id^='edit_']", function(){
     
 });
 // edit function ends here
+
 
 
 </script>

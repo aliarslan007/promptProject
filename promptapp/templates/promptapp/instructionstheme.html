@@ -45,30 +45,9 @@
                 
             </div>
 
-            {% for instruction in instructions_theme %}
-            <div class="d-flex grid col-10">
-              <input type="hidden" id="instruction_set_id" name="instruction_set_id" value="{{ instruction.id }}"/>
+            <div id="instructions-container"></div>
 
-                <div class="col-3  p-2">
-                    <span class="d-flex justify-content-center align-items-center bold_text">{{ forloop.counter }}</span>
-                </div>
-                <div class="col-3  p-2 me-3">
-                    <span id="instruction_name_{{ forloop.counter0 }}" class="d-flex justify-content-center align-items-center bold_text">{{ instruction.name }}</span>
-                </div>
-                <div class="col-3 d-flex justify-content-center align-items-center  custom_border">
-                  <button id="edit_{{ instruction.id }}" class="btn btn-sm btn-primary me-2 cursor-pointer">Edit</button>
-                  <svg id="delete_{{ instruction.id }}"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash cursor-pointer" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                      </svg>
-                </div>
-            </div>
-            <input type="hidden" id="instruction_id_{{ forloop.counter0 }}" name="instruction_id_{{ forloop.counter0 }}" value="{{ instruction.id }}"/>
-            <input type="hidden" id="instructionA_{{ forloop.counter0 }}" name="instructionA_{{ forloop.counter0 }}" value="{{ instruction.instructionA }}"/>
-            <input type="hidden" id="instructionB_{{ forloop.counter0 }}" name="instructionB_{{ forloop.counter0 }}" value="{{ instruction.instructionB }}"/>
-            <input type="hidden" id="instructionC_{{ forloop.counter0 }}" name="instructionC_{{ forloop.counter0 }}" value="{{ instruction.instructionC }}"/>
-                   
-            {% endfor %}
+           
             <input type="hidden" id="instruction_data" name="instruction_data" value="{{ instructions_data }}">
 
         </div>
@@ -194,6 +173,51 @@ function addNewInstruction() {
 }
 
 
+
+
+function loadThemeAndInstructions(){
+
+const instructionsData = JSON.parse(document.getElementById('instruction_data').value);
+
+const instructionsContainer = document.getElementById('instructions-container');
+          let content = '';
+// Loop through each instruction set
+instructionsData.forEach((instructionSet, setIndex) => {
+              instructionSet.instructions.forEach((instruction, instructionIndex) => {
+                  content += `
+                      <div class="d-flex grid col-10">
+                          <input type="hidden" id="instruction_set_id_${instructionSet.set_id}" name="instruction_set_id_${instructionSet.set_id}" value="${instructionSet.set_id}" />
+
+                          <div class="col-3 p-2">
+                              <span class="d-flex justify-content-center align-items-center bold_text">${setIndex + 1}</span>
+                          </div>
+                          <div class="col-3 p-2 me-3">
+                              <span id="instruction_name_${instructionSet.set_id}" class="d-flex justify-content-center align-items-center bold_text">${instructionSet.set_name}</span>
+                          </div>
+                          <div class="col-3 p-2">
+                              <span class="d-flex justify-content-center align-items-center">${instruction.name}</span>
+                          </div>
+                          <div class="col-3 d-flex justify-content-center align-items-center custom_border">
+                              <button id="edit_${instructionSet.set_id}" class="btn btn-sm btn-primary me-2 cursor-pointer">Edit</button>
+                              <svg id="delete_${instructionSet.set_id}_${instruction.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash cursor-pointer" viewBox="0 0 16 16">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                              </svg>
+                          </div>
+                      </div>
+                      <input type="hidden" id="instruction_id_${instructionSet.set_id}" name="instruction_id_${instructionSet.set_id}" value="${instructionSet.set_id}" />
+                  `;
+              });
+          });
+
+          // Insert generated content into the container
+          instructionsContainer.innerHTML = content;
+
+}
+
+
+
+
 $(document).ready(function() {
   let instructionIndex = 1; // Initialize index
 
@@ -235,7 +259,9 @@ $(document).ready(function() {
             // alert("At least one instruction row must be present.");
         }
     });
-});
+
+    loadThemeAndInstructions()
+  });
 
 function saveInstructions () {
   const modal_instruction_id = document.getElementById("modal_instruction_id");
@@ -289,7 +315,7 @@ function saveInstructions () {
     });
   });
 
-  function deleteInstruction(instruction_theme_id) {
+  function deleteInstruction(instruction_theme_id, instruction_row_id) {
     // var confirmation = confirm("Are you sure you want to delete this instruction?");
     {
       // var instructionId = $('#instruction_id_' + index).val();
@@ -297,7 +323,8 @@ function saveInstructions () {
         type: 'POST',
         url: '/delete-instruction-theme/',
         data: {
-          'instruction_id': instruction_theme_id,
+          'instruction_theme_id': instruction_theme_id,
+          'instruction_row_id': instruction_row_id,
           'csrfmiddlewaretoken': '{{ csrf_token }}', // Add this line to send the CSRF token
         },
         dataType: 'json',
@@ -322,8 +349,10 @@ function saveInstructions () {
   $(document).on("click", "[id^='delete_']", function(){
     var id = $(this).attr('id'); // Get the ID of the clicked element
     var instruction_theme_id = id.split('_')[1]; // Extract the index from the ID
-    deleteInstruction(instruction_theme_id); // Call the deleteInstruction function with the extracted index
-});
+    var instruction_row_id = id.split('_')[2]; // Extract the index from the ID
+    deleteInstruction(instruction_theme_id, instruction_row_id);
+
+  });
 
 
 // function editInstruction(index) {
