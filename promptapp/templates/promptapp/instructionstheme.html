@@ -36,9 +36,12 @@
                 <div class="col-3 gap-colour p-2 ">
                     <label class="d-flex justify-content-center bold_text" for="floatingInputValue">#</label>
                 </div>
-                <div class="col-3 gap-colour p-2 me-3">
-                    <label class=" d-flex justify-content-center bold_text" for="floatingInputValue">Instruction</label>
+                <div class="col-3 gap-colour p-2 ">
+                    <label class=" d-flex justify-content-center bold_text" for="floatingInputValue">Instruction Set Name</label>
                 </div>
+                <div class="col-3 gap-colour p-2 me-3">
+                  <label class=" d-flex justify-content-center bold_text" for="floatingInputValue">Instruction Name</label>
+              </div>
                 <div class="col-3 " id="presence_penalty_div" name="presence_penalty_div">
                     <label class="p-2 d-flex justify-content-center bold_text custom_border " for="floatingInputValue">Action</label>
                 </div>
@@ -46,8 +49,6 @@
             </div>
 
             <div id="instructions-container"></div>
-
-           
             <input type="hidden" id="instruction_data" name="instruction_data" value="{{ instructions_data }}">
 
         </div>
@@ -64,15 +65,15 @@
           <form action="" id="new_instruction_form">  
             <input type="hidden" id="modal_instruction_id" name="modal_instruction_id" value="">
             <div class="mb-3">
-              <label for="recipient-name" class="col-form-label bold_text">Instruction Name:</label>
+              <label for="recipient-name" class="col-form-label bold_text">Instruction Set Name:</label>
               <input  id="new_instruction_name" name="new_instruction_name" type="text" class="form-control " required>
             </div>
             <div class="mb-3" id="parent_instruction_row" name="parent_instruction_row">
               <div id="instruction_row_0" name="instruction_row_0" class="">
-                <label for="message-text" class="col-form-label bold_text">Name :</label>
+                <label for="message-text" class="col-form-label bold_text">Instruction Name :</label>
                 <Input id="new_instruction_row_name_0" name="new_instruction_row_name_0" class="form-control " required></textarea>
                 
-                <label for="message-text" class="col-form-label bold_text mt-1">Text :</label>
+                <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Prompt :</label>
                 <textarea id="new_instruction_0" name="new_instruction_0" class="form-control " required></textarea>
                 <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
 
@@ -153,10 +154,10 @@ function addNewInstruction() {
     // Populate instruction rows
     let newRow = `
         <div id="instruction_row_0" name="instruction_row_0" class="instruction-row">
-            <label for="message-text" class="col-form-label bold_text">Name :</label>
+            <label for="message-text" class="col-form-label bold_text">Instruction Name:</label>
             <input id="new_instruction_row_name_0" name="new_instruction_row_name_0" class="form-control" value="" required>
             
-            <label for="message-text" class="col-form-label bold_text mt-1">Text :</label>
+            <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Prompt:</label>
             <textarea id="new_instruction_0" name="new_instruction_0" class="form-control" required></textarea>
             
             <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
@@ -223,7 +224,7 @@ $(document).ready(function() {
 
     // Event listener for the add new instruction button
     $('#add_new_instruction').click(function() {
-        
+      $('#modal_title').text('New Instruction');
         addNewInstruction();
     });
 
@@ -231,10 +232,10 @@ $(document).ready(function() {
         // Create new row with incremented index
         let newRow = `
             <div id="instruction_row_${instructionIndex}" name="instruction_row_${instructionIndex}">
-                <label for="message-text" class="col-form-label bold_text">Instruction Name :</label>
+                <label for="message-text" class="col-form-label bold_text">Instruction Name:</label>
                 <input id="new_instruction_row_name_${instructionIndex}" name="new_instruction_row_name_${instructionIndex}" class="form-control" required>
                 
-                <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Text :</label>
+                <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Prompt:</label>
                 <textarea id="new_instruction_${instructionIndex}" name="new_instruction_${instructionIndex}" class="form-control" required></textarea>
                 <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
 
@@ -354,79 +355,12 @@ function saveInstructions () {
 
   });
 
-
-// function editInstruction(index) {
-//     // Extracting values using index
-//     var instructionId = $('#instruction_id_' + index).val();
-//     var instructionName = $('#instruction_name_' + index).text();
-//     var instructionA = $('#instructionA_' + index).val();
-//     var instructionB = $('#instructionB_' + index).val();
-//     var instructionC = $('#instructionC_' + index).val();
-//     $('#modal_title').text('Edit Instruction'); // Change modal title to "Edit Instruction"
-
-//     // Setting values in modal
-//     $('#instruction_id').val(instructionId);
-//     $('#new_instruction_name').val(instructionName);
-//     $('#new_instruction_A').val(instructionA);
-//     $('#new_instruction_B').val(instructionB);
-//     $('#new_instruction_C').val(instructionC);
-
-//     // Show modal
-//     $('#new_instruction_modal').modal('show');
-
-//     // Adjusting modal's properties
-//     var new_instruction_modal =document.getElementById("new_instruction_modal");
-//     new_instruction_modal.style.visibility = "visible";
-//     new_instruction_modal.style.opacity = 1;
-//     new_instruction_modal.style.top = 0;   
-// }
-
-// Function to populate the modal with instruction set data for editing
-// function editInstructionSet() {
-//     // Find the instruction set data corresponding to the given ID 
-//     const buttonId = this.id; // Get the ID of the clicked button
-//     const instructionSetId = buttonId.split('_')[1]; // Extract the ID from the button ID
-//     console.log("Instruction Set ID:", instructionSetId);
-
-//     const instructionsData =$('#instruction_data').val();
-//     console.log("instruction_data : ", instructionsData);
-
-//     const instructionSetData = instructionsData.find(set => set.id === instructionSetId);
-//     if (instructionSetData) {
-//         // Populate the modal fields with the instruction set data
-//         $('#new_instruction_name').val(instructionSetData.name);
-
-//         // Clear existing instruction rows
-//         $('#parent_instruction_row').empty();
-
-//         // Populate instruction rows
-//         instructionSetData.instructions.forEach((instruction, index) => {
-//             let newRow = `
-//                 <div id="instruction_row_${index}" name="instruction_row_${index}" class="instruction-row">
-//                     <label for="message-text" class="col-form-label bold_text">Instruction Name :</label>
-//                     <input id="new_instruction_row_name_${index}" name="new_instruction_row_name_${index}" class="form-control" value="${instruction.name}" required>
-                    
-//                     <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Text :</label>
-//                     <textarea id="new_instruction_${index}" name="new_instruction_${index}" class="form-control" required>${instruction.text}</textarea>
-                    
-//                     <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
-//                     <br><br>
-//                 </div>
-//             `;
-//             $('#parent_instruction_row').append(newRow);
-//         });
-//     }
-
-
-//   }
-
-
-
 $(document).on("click", "[id^='edit_']", function(){
     var id = $(this).attr('id'); // Get the ID of the clicked element
     var instructionSetId = id.split('_')[1]; // Extract the index from the ID
       // Find the instruction set data corresponding to the given ID 
     console.log("Instruction Set ID:", instructionSetId);
+    $('#modal_title').text('Edit  Instruction');
 
     const instructionsData = JSON.parse($('#instruction_data').val()); // Parse JSON string to object
     console.log("instruction_data : ", instructionsData);
@@ -448,7 +382,7 @@ $(document).on("click", "[id^='edit_']", function(){
                     <label for="message-text" class="col-form-label bold_text">Instruction Name :</label>
                     <input id="new_instruction_row_name_${index}" name="new_instruction_row_name_${index}" class="form-control" value="${instruction.name}" required>
                     
-                    <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Text :</label>
+                    <label for="message-text" class="col-form-label bold_text mt-1">Enter Instruction Prompt:</label>
                     <textarea id="new_instruction_${index}" name="new_instruction_${index}" class="form-control" required>${instruction.text}</textarea>
                     
                     <button type="button" class="btn btn-danger mt-2 delete-row">Delete</button>
