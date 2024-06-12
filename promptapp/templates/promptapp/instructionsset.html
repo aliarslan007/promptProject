@@ -27,10 +27,18 @@
             <div class="col-2 gap-colour"></div>
         </div>
         <div class="col-9 main-content pt-4 pe-4">
+          
             <br><br>
             <div class="d-flex flex-row-reverse p-3 mt-5  mb-2 me-2">
                 <button id="add_new_instruction" name="add_new_instruction" type="button" class="btn text-white btn-success p-2 me-5 px-3" >New Theme</button>
             </div>
+            {% if messages %}
+              <div class="alert alert-info">
+                  {% for message in messages %}
+                      <p>{{ message }}</p>
+                  {% endfor %}
+              </div>
+          {% endif %}
 
             <div class="d-flex grid  col-10">
                 <div class="col-3 gap-colour p-2 ">
@@ -47,7 +55,13 @@
                 </div>
                 
             </div>
-            <div id="instructions-container"></div>            
+            <div id="instructions-container"></div>   
+            <div class="d-flex align-items-center mt-4">
+              <button id="export_theme" name="export_theme" type="button" class="btn btn-secondary ml-3 mx-2">Export Themes</button>
+              <input type="file" id="file_input" class="file-input" accept=".csv">
+              <button id="import_button" class="import-button">Import Themes</button>
+              <span id="file_success_msg" class="success-message">CSV uploaded successfully</span>
+              </div>        
             <input type="hidden" id="instruction_data" name="instruction_data" value="{{ instructions_data }}">
         </div>
 
@@ -89,10 +103,8 @@
       </div>
     </div>
   </div>
-        
-
-
-    </div> 
+  
+            </div> 
    
 
 
@@ -268,6 +280,7 @@ function loadThemeAndInstructions(){
 
   const instructionsContainer = document.getElementById('instructions-container');
             let content = '';
+  var counter = 1
   // Loop through each instruction set
   instructionsData.forEach((instructionSet, setIndex) => {
                 instructionSet.instructions.forEach((instruction, instructionIndex) => {
@@ -276,7 +289,7 @@ function loadThemeAndInstructions(){
                             <input type="hidden" id="instruction_set_id_${instructionSet.set_id}" name="instruction_set_id_${instructionSet.set_id}" value="${instructionSet.set_id}" />
 
                             <div class="col-3 p-2">
-                                <span class="d-flex justify-content-center align-items-center bold_text">${setIndex + 1}</span>
+                                <span class="d-flex justify-content-center align-items-center bold_text">${counter }</span>
                             </div>
                             <div class="col-3 p-2 me-3">
                                 <span id="instruction_name_${instructionSet.set_id}" class="d-flex justify-content-center align-items-center bold_text">${instructionSet.set_name}</span>
@@ -294,6 +307,7 @@ function loadThemeAndInstructions(){
                         </div>
                         <input type="hidden" id="instruction_id_${instructionSet.set_id}" name="instruction_id_${instructionSet.set_id}" value="${instructionSet.set_id}" />
                     `;
+                    counter+=1;
                 });
             });
 
@@ -399,10 +413,45 @@ $(document).on("click", "[id^='edit_']", function(){
 
     
 });
-// edit function ends here
 
 
+document.getElementById('export_theme').addEventListener('click', function() {
+        const url = '{% url "promptapp:export_themes" %}';
+        window.location.href = url;
+    });
 
+    document.getElementById('import_button').addEventListener('click', function() {
+            document.getElementById('file_input').click();
+        });
+
+        document.getElementById('file_input').addEventListener('change', function(event) {
+            const fileInput = event.target;
+            if (fileInput.files.length === 0) {
+                alert('Please select a file to upload.');
+                return;
+            }
+
+            const formData = new FormData();
+            const url = '{% url "promptapp:import_themes" %}'
+            formData.append('file', fileInput.files[0]);
+
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+              document.getElementById('file_success_msg').style.display = 'inline';
+              window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to upload CSV. Please try again.');
+            });
+        });
 </script>
 </body>
 </html>

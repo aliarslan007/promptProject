@@ -14,6 +14,8 @@ import httpx
 import openai
 from openai import OpenAIError, AuthenticationError, RateLimitError, APIConnectionError
 from django.contrib.auth.decorators import login_required
+import csv
+from django.contrib import messages
 
 # from openai import openai.error.AuthenticationError, openai.error.InvalidRequestError
 
@@ -547,3 +549,102 @@ def is_api_active(api_name):
         return setting_page_obj.OpenAI_API_status
     return False
 
+
+@login_required(login_url="myauth:loginPage")
+def export_themes(request):
+    # Define the HttpResponse with the CSV content type
+    response = HttpResponse(content_type='text/csv')
+    # Specify the CSV file name
+    response['Content-Disposition'] = 'attachment; filename="Themes.csv"'
+    # Create a CSV writer
+    writer = csv.writer(response)
+    # Write the CSV header row
+    writer.writerow(['Theme Set Name', 'Theme Name', 'Theme Prompt'])
+    # Fetch all themes
+    themes = InstructionsSet.objects.all()
+    # Iterate over each theme
+    for theme in themes:
+        # Fetch all instructions associated with the current theme
+        instructions = theme.instructions.all()
+        # Iterate over each instruction
+        for instruction in instructions:
+            # Write a row to the CSV file for each instruction
+            writer.writerow([theme.name, instruction.name, instruction.text])
+
+    # Return the response to download the CSV file
+    return response
+
+
+@csrf_exempt
+@login_required(login_url="myauth:loginPage")
+def import_themes(request):
+    try:
+        file = request.FILES['file']
+        if not file.name.endswith('.csv'):
+            messages.error(request, "This is not a CSV file.")
+            return redirect('your_redirect_url')
+
+        data_set = file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)  # Skip the header row
+
+        for row in csv.reader(io_string, delimiter=',', quotechar='"'):
+            theme_name, instruction_name, instruction_text = row
+            set, created = InstructionsSet.objects.get_or_create(name=theme_name)
+            Instruction.objects.create(
+                instruction_set=set,
+                name=instruction_name,
+                text=instruction_text
+            )
+        messages.success(request, "Themes imported successfully.")
+    except Exception as e:
+        messages.error(request, f"Error importing themes: {e}")
+
+
+
+# export impot of instructions now
+
+
+@login_required(login_url="myauth:loginPage")
+def export_instructions(request):
+    print("in 1")
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Instructions.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Insructions Set Name', 'Instruction Name', 'Instruction Prompt'])
+
+    themes = InstructionsTheme.objects.all()
+
+    for theme in themes:
+        rows = theme.instructionsThemeRow.all()
+        for row in rows:
+            writer.writerow([theme.name, row.name, row.text])
+
+    return response
+
+
+@csrf_exempt
+@login_required(login_url="myauth:loginPage")
+def import_instructions(request):
+    try:
+        file = request.FILES['file']
+        if not file.name.endswith('.csv'):
+            messages.error(request, "This is not a CSV file.")
+            return redirect('your_redirect_url')
+
+        data_set = file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)  # Skip the header row
+
+        for row in csv.reader(io_string, delimiter=',', quotechar='"'):
+            instructionsSet_name, instruction_name, prompt_text = row
+            theme, created = InstructionsTheme.objects.get_or_create(name=instructionsSet_name)
+            InstructionsThemeRow.objects.create(
+                instruction_theme=theme,
+                name=instruction_name,
+                text=prompt_text
+            )
+        messages.success(request, "Instruction Sets imported successfully.")
+    except Exception as e:
+        messages.error(request, f"Error importing instruction set: {e}")

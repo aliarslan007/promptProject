@@ -16,5 +16,8 @@ urlpatterns = [
     path('setting_page/', views.setting_page, name='setting_page'),
     path('save_claude_api/', views.save_claude_api, name='save_claude_api'),
     path('save_openai_api/', views.save_openai_api, name='save_openai_api'),
-
+    path('export-themes/', views.export_themes, name='export_themes'),
+    path('import-themes/', views.import_themes, name='import_themes'),
+    path('export-instructions/', views.export_instructions, name='export_instructions'),
+    path('import-instructions/', views.import_instructions, name='import_instructions'),
 ]
